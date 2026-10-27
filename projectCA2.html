@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HostelBite | Smart Mess Management</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Arial, sans-serif;
+}
+
+:root {
+    --green: #174c3c;
+    --light-green: #e6f0e8;
+    --cream: #f8f7f0;
+    --orange: #e9a34b;
+    --text: #26352e;
+    --muted: #748078;
+}
+
+body {
+    background: var(--cream);
+    color: var(--text);
+}
+
+button, input, select, textarea {
+    font: inherit;
+}
+
+/* LOGIN PAGE */
+
+.login-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    background: #e9eee7;
+}
+
+.login-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 850px;
+    max-width: 100%;
+    min-height: 500px;
+    overflow: hidden;
+    border-radius: 24px;
+    background: white;
+    box-shadow: 0 25px 70px #183d2b20;
+}
+
+.login-brand {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 42px;
+    color: white;
+    background:
+        radial-gradient(circle at 90% 10%, #4b8266 0, transparent 35%),
+        var(--green);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 23px;
+    font-weight: 800;
+}
+
+.logo-icon {
+    display: grid;
+    place-items: center;
+    width: 43px;
+    height: 43px;
+    border-radius: 14px;
+    background: var(--orange);
+    color: var(--green);
+}
+
+.brand-content h1 {
+    margin-bottom: 15px;
+    font-size: 38px;
+    line-height: 1.15;
+}
+
+.brand-content p {
+    max-width: 300px;
+    color: #d5e3d9;
+    line-height: 1.8;
+}
+
+.brand-food {
+    font-size: 65px;
+    letter-spacing: 8px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 42px;
+}
+
+.login-form h2 {
+    margin-bottom: 10px;
+    font-size: 29px;
+}
+
+.login-form > p {
+    margin-bottom: 28px;
+    color: var(--muted);
+    line-height: 1.6;
+}
+
+.field {
+    margin-bottom: 18px;
+}
+
+.field label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.field input {
+    width: 100%;
+    padding: 14px;
+    border: 1px solid #dce4dc;
+    border-radius: 11px;
+    outline: none;
+    background: #fbfcfa;
+}
+
+.field input:focus {
+    border-color: var(--green);
+    box-shadow: 0 0 0 3px #174c3c15;
+}
+
+.login-button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 11px;
+    color: white;
+    background: var(--green);
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.login-button:hover {
+    background: #23654f;
+    transform: translateY(-1px);
+}
+
+.login-hint {
+    margin-top: 18px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--light-green);
+    color: var(--green);
+    font-size: 13px;
+    text-align: center;
+}
+
+.error-message {
+    min-height: 22px;
+    margin-bottom: 8px;
+    color: #c0392b;
+    font-size: 13px;
+}
+
+/* MAIN WEBSITE */
+
+#website {
+    display: none;
+}
+
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 7%;
+    border-bottom: 1px solid #e7e9df;
+    background: #f8f7f0f5;
+    backdrop-filter: blur(12px);
+}
+
+.topbar .logo {
+    color: var(--green);
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+}
+
+nav a {
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: #3a8464;
+}
+
+.logout-button {
+    padding: 10px 17px;
+    border: 1px solid #dce4dc;
+    border-radius: 9px;
+    color: var(--green);
+    background: white;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.hero {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 35px;
+    padding: 65px 7% 75px;
+}
+
+.eyebrow {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 9px 14px;
+    border-radius: 30px;
+    background: var(--light-green);
+    color: var(--green);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+.hero h1 {
+    max-width: 600px;
+    margin-bottom: 20px;
+    color: var(--green);
+    font-size: clamp(40px, 5vw, 65px);
+    line-height: 1.07;
+    letter-spacing: -2px;
+}
+
+.hero h1 span {
+    color: #d58c36;
+}
+
+.hero p {
+    max-width: 520px;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.9;
+}
+
+.hero-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 13px;
+    margin-top: 28px;
+}
+
+.primary-button, .secondary-button {
+    display: inline-block;
+    padding: 14px 21px;
+    border-radius: 10px;
+    font-weight: 700;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.primary-button {
+    border: 0;
+    color: white;
+    background: var(--green);
+}
+
+.secondary-button {
+    border: 1px solid #dce4dc;
+    color: var(--green);
+    background: white;
+}
+
+.hero-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 340px;
+    overflow: hidden;
+    border-radius: 28px;
+    background: #e5eddf;
+}
+
+.food-circle {
+    display: grid;
+    place-items: center;
+    width: 230px;
+    height: 230px;
+    border: 15px solid #ffffffb5;
+    border-radius: 50%;
+    background: #fff9e9;
+    box-shadow: 0 20px 40px #174c3c16;
+    font-size: 100px;
+}
+
+.food-label {
+    position: absolute;
+    padding: 12px 16px;
+    border-radius: 13px;
+    background: white;
+    box-shadow: 0 8px 25px #174c3c12;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.label-one {
+    top: 45px;
+    left: 20px;
+}
+
+.label-two {
+    right: 18px;
+    bottom: 48px;
+}
+
+.section {
+    padding: 65px 7%;
+}
+
+.section-heading {
+    margin-bottom: 32px;
+}
+
+.section-heading small {
+    color: #b8792b;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.section-heading h2 {
+    margin: 10px 0;
+    color: var(--green);
+    font-size: 35px;
+}
+
+.section-heading p {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.timings {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.timing-card {
+    padding: 24px;
+    border: 1px solid #e7e9df;
+    border-radius: 18px;
+    background: white;
+}
+
+.timing-card .emoji {
+    margin-bottom: 14px;
+    font-size: 30px;
+}
+
+.timing-card h3 {
+    margin-bottom: 8px;
+    color: var(--green);
+}
+
+.timing-card p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.menu-section {
+    background: #eef2e9;
+}
+
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.menu-card {
+    overflow: hidden;
+    border: 1px solid #e4e9df;
+    border-radius: 19px;
+    background: white;
+    transition: 0.25s;
+}
+
+.menu-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px #174c3c12;
+}
+
+.menu-visual {
+    display: grid;
+    place-items: center;
+    min-height: 150px;
+    background: #e5efdf;
+    font-size: 65px;
+}
+
+.menu-card:nth-child(2) .menu-visual {
+    background: #f7ead5;
+}
+
+.menu-card:nth-child(3) .menu-visual {
+    background: #eee5f3;
+}
+
+.menu-info {
+    padding: 22px;
+}
+
+.meal-tag {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding: 6px 10px;
+    border-radius: 20px;
+    background: var(--light-green);
+    color: var(--green);
+    font-size: 11px;
+    font-weight: 800;
+}
+
+.menu-info h3 {
+    margin-bottom: 8px;
+    color: var(--green);
+}
+
+.menu-info p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.menu-time {
+    margin-top: 15px;
+    padding-top: 13px;
+    border-top: 1px solid #edf0e9;
+    color: #8b6b40;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+/* RUSH REDUCTION */
+
+.features {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+}
+
+.feature-card {
+    padding: 25px;
+    border-radius: 17px;
+    background: white;
+    border: 1px solid #e7e9df;
+}
+
+.feature-icon {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    margin-bottom: 17px;
+    border-radius: 14px;
+    background: var(--light-green);
+    font-size: 24px;
+}
+
+.feature-card h3 {
+    margin-bottom: 10px;
+    color: var(--green);
+}
+
+.feature-card p {
+    color: var(--muted);
+    font-size: 14px;
+    line-height: 1.8;
+}
+
+.feedback-section {
+    background: #e9eee5;
+}
+
+.feedback-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 35px;
+    align-items: start;
+    padding: 35px;
+    border-radius: 22px;
+    background: white;
+}
+
+.feedback-box h2 {
+    margin-bottom: 12px;
+    color: var(--green);
+    font-size: 30px;
+}
+
+.feedback-box p {
+    color: var(--muted);
+    line-height: 1.8;
+}
+
+.feedback-form label {
+    display: block;
+    margin: 13px 0 7px;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.feedback-form input,
+.feedback-form select,
+.feedback-form textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #dce4dc;
+    border-radius: 9px;
+    outline: none;
+    background: #fbfcfa;
+}
+
+.feedback-form textarea {
+    min-height: 90px;
+    resize: vertical;
+}
+
+.feedback-form button {
+    margin-top: 15px;
+}
+
+#feedbackMessage {
+    margin-top: 12px;
+    color: var(--green);
+    font-size: 14px;
+    font-weight: 700;
+}
+
+footer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 25px 7%;
+    color: #dce8df;
+    background: var(--green);
+    font-size: 13px;
+}
+
+/* MOBILE RESPONSIVE */
+
+@media (max-width: 800px) {
+    .login-box {
+        grid-template-columns: 1fr;
+        max-width: 480px;
+    }
+
+    .login-brand {
+        gap: 25px;
+        padding: 25px;
+    }
+
+    .brand-content h1 {
+        font-size: 29px;
+    }
+
+    .brand-food {
+        font-size: 40px;
+    }
+
+    .login-form {
+        padding: 28px;
+    }
+
+    .topbar {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px 5%;
+    }
+
+    nav {
+        flex-wrap: wrap;
+        gap: 13px;
+    }
+
+    nav a {
+        font-size: 12px;
+    }
+
+    .hero {
+        grid-template-columns: 1fr;
+        padding: 45px 5%;
+    }
+
+    .hero-art {
+        min-height: 280px;
+    }
+
+    .section {
+        padding: 48px 5%;
+    }
+
+    .timings,
+    .menu-grid,
+    .features {
+        grid-template-columns: 1fr;
+    }
+
+    .feedback-box {
+        grid-template-columns: 1fr;
+        padding: 25px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN INTERFACE -->
+
+<div class="login-screen" id="loginScreen">
+    <div class="login-box">
+
+        <div class="login-brand">
+            <div class="logo">
+                <div class="logo-icon">HB</div>
+                HostelBite
+            </div>
+
+            <div class="brand-content">
+                <h1>Good food.<br>Better campus life.</h1>
+                <p>
+                    Your hostel mess companion. Check meals, plan your
+                    visits and help make mess time better for everyone.
+                </p>
+            </div>
+
+            <div class="brand-food">🍛 🥗 🍽️</div>
+        </div>
+
+        <form class="login-form" id="loginForm">
+            <h2>Welcome back 👋</h2>
+            <p>Sign in to explore your hostel mess dashboard.</p>
+
+            <div class="field">
+                <label for="userId">Student ID</label>
+                <input
+                    type="text"
+                    id="userId"
+                    placeholder="Enter your student ID"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="field">
+                <label for="userPassword">Password</label>
+                <input
+                    type="password"
+                    id="userPassword"
+                    placeholder="Enter your password"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <div class="error-message" id="loginError"></div>
+
+            <button class="login-button" type="submit">
+                Sign In →
+            </button>
+
+            <div class="login-hint">
+                Demo login ID: <b>1234</b> &nbsp; | &nbsp;
+                Password: <b>1234</b>
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<!-- MAIN WEBSITE -->
+
+<div id="website">
+
+    <header class="topbar">
+        <div class="logo">
+            <div class="logo-icon">HB</div>
+            HostelBite
+        </div>
+
+        <nav>
+            <a href="#home">Home</a>
+            <a href="#timings">Timings</a>
+            <a href="#menu">Menu</a>
+            <a href="#features">Our Solution</a>
+            <a href="#feedback">Feedback</a>
+            <button class="logout-button" onclick="logout()">Logout</button>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero" id="home">
+            <div>
+                <div class="eyebrow">SMART HOSTEL MESS EXPERIENCE</div>
+
+                <h1>Good food.<br><span>Less waiting.</span></h1>
+
+                <p>
+                    A smarter way to experience hostel dining.
+                    Check the daily menu, know the meal timings and
+                    help reduce overcrowding at the mess.
+                </p>
+
+                <div class="hero-buttons">
+                    <a class="primary-button" href="#menu">Explore Today's Menu ↗</a>
+                    <a class="secondary-button" href="#features">How It Works</a>
+                </div>
+            </div>
+
+            <div class="hero-art">
+                <div class="food-circle">🍲</div>
+                <div class="food-label label-one">🥗 Fresh meals daily</div>
+                <div class="food-label label-two">⏱️ Less waiting</div>
+            </div>
+        </section>
+
+        <section class="section" id="timings">
+            <div class="section-heading">
+                <small>PLAN YOUR VISIT</small>
+                <h2>Mess Timings</h2>
+                <p>Check the sample schedule before heading to the mess.</p>
+            </div>
+
+            <div class="timings">
+                <div class="timing-card">
+                    <div class="emoji">🌅</div>
+                    <h3>Breakfast</h3>
+                    <p>7:00 AM – 9:00 AM</p>
+                    <p>Start your day with a fresh meal.</p>
+                </div>
+
+                <div class="timing-card">
+                    <div class="emoji">☀️</div>
+                    <h3>Lunch</h3>
+                    <p>12:00 PM – 2:00 PM</p>
+                    <p>Take a break and enjoy your lunch.</p>
+                </div>
+
+                <div class="timing-card">
+                    <div class="emoji">🌙</div>
+                    <h3>Dinner</h3>
+                    <p>7:00 PM – 9:00 PM</p>
+                    <p>End the day with a satisfying dinner.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section menu-section" id="menu">
+            <div class="section-heading">
+                <small>WHAT'S COOKING?</small>
+                <h2>Today's Menu</h2>
+                <p>Sample menu for demonstration. Actual meals may vary.</p>
+            </div>
+
+            <div class="menu-grid">
+                <article class="menu-card">
+                    <div class="menu-visual">🥘</div>
+                    <div class="menu-info">
+                        <span class="meal-tag">BREAKFAST</span>
+                        <h3>Idli & Sambar</h3>
+                        <p>Soft idlis served with warm sambar and chutney.</p>
+                        <div class="menu-time">🕒 7:00 AM – 9:00 AM</div>
+                    </div>
+                </article>
+
+                <article class="menu-card">
+                    <div class="menu-visual">🍛</div>
+                    <div class="menu-info">
+                        <span class="meal-tag">LUNCH</span>
+                        <h3>Rice & Dal</h3>
+                        <p>Rice, dal, seasonal vegetables and salad.</p>
+                        <div class="menu-time">🕒 12:00 PM – 2:00 PM</div>
+                    </div>
+                </article>
+
+                <article class="menu-card">
+                    <div class="menu-visual">🫓</div>
+                    <div class="menu-info">
+                        <span class="meal-tag">DINNER</span>
+                        <h3>Roti & Paneer</h3>
+                        <p>Fresh roti served with paneer curry.</p>
+                        <div class="menu-time">🕒 7:00 PM – 9:00 PM</div>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="section" id="features">
+            <div class="section-heading">
+                <small>THE IDEA</small>
+                <h2>A smarter solution to mess rush</h2>
+                <p>
+                    Simple features that could help students save time
+                    and make hostel dining more comfortable.
+                </p>
+            </div>
+
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">📋</div>
+                    <h3>Check Before You Go</h3>
+                    <p>
+                        Students can check the menu and meal timings
+                        before leaving their rooms.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⏰</div>
+                    <h3>Plan Meal Time</h3>
+                    <p>
+                        Students can plan their visit around the
+                        published meal schedule to avoid arriving together.
+                    </p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3>Share Feedback</h3>
+                    <p>
+                        Students can share suggestions about food quality,
+                        cleanliness and overcrowding.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section feedback-section" id="feedback">
+            <div class="feedback-box">
+                <div>
+                    <div class="eyebrow">YOUR VOICE MATTERS</div>
+                    <h2>Make the mess better.</h2>
+                    <p>
+                        Tell us about your mess experience. Your suggestions
+                        can help identify problems and improve student dining.
+                    </p>
+                </div>
+
+                <form class="feedback-form" id="feedbackForm">
+                    <label for="studentName">Your Name</label>
+                    <input
+                        id="studentName"
+                        type="text"
+                        placeholder="Enter your name"
+                        required
+                    >
+
+                    <label for="rating">Rate Your Mess Experience</label>
+                    <select id="rating" required>
+                        <option value="">Choose a rating</option>
+                        <option value="5">⭐⭐⭐⭐⭐ Excellent</option>
+                        <option value="4">⭐⭐⭐⭐ Good</option>
+                        <option value="3">⭐⭐⭐ Average</option>
+                        <option value="2">⭐⭐ Poor</option>
+                        <option value="1">⭐ Very Poor</option>
+                    </select>
+
+                    <label for="suggestion">Your Suggestion</label>
+                    <textarea
+                        id="suggestion"
+                        placeholder="Tell us what we can improve..."
+                        required
+                    ></textarea>
+
+                    <button class="primary-button" type="submit">
+                        Submit Feedback →
+                    </button>
+
+                    <div id="feedbackMessage" role="status"></div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div><b>HostelBite</b> — Smart Hostel Mess Management</div>
+        <div>Student project prototype • Sample data for demonstration</div>
+    </footer>
+
+</div>
+
+<script>
+/* DEMO LOGIN
+   ID: 1234
+   Password: 1234
+*/
+
+const loginForm = document.getElementById("loginForm");
+const loginScreen = document.getElementById("loginScreen");
+const website = document.getElementById("website");
+const loginError = document.getElementById("loginError");
+
+loginForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    const id = document.getElementById("userId").value.trim();
+    const password = document.getElementById("userPassword").value;
+
+    if (id === "1234" && password === "1234") {
+        loginScreen.style.display = "none";
+        website.style.display = "block";
+        loginError.textContent = "";
+    } else {
+        loginError.textContent = "Incorrect ID or password. Please try again.";
+    }
+});
+
+function logout() {
+    website.style.display = "none";
+    loginScreen.style.display = "flex";
+    loginForm.reset();
+    loginError.textContent = "";
+}
+
+/* DEMO FEEDBACK FORM
+   This displays a confirmation but does not save feedback to a database.
+*/
+
+const feedbackForm = document.getElementById("feedbackForm");
+
+feedbackForm.addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    document.getElementById("feedbackMessage").textContent =
+        "Thank you! Your feedback has been received in this demo.";
+
+    feedbackForm.reset();
+});
+</script>
+
+</body>
+</html>
